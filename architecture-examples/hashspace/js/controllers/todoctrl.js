@@ -17,6 +17,10 @@
 (function () {
     'use strict';
 
+    function trim(str) {
+        return str.replace(/^\s+|\s+$/g, '');
+    };
+
     // Parts of this code has been copied from the angular MVC controller at
     // https://github.com/addyosmani/todomvc/blob/gh-pages/architecture-examples/angularjs/js/controllers/todoCtrl.js
     var klass = require("hsp/klass");
@@ -64,11 +68,13 @@
         addTodo : function () {
             this.doneEditingAll();
             var newTodo = this.newTodo;
+
             // ignore empty entries
-            if (newTodo.title.length > 0) {
-                // put new todo at the beginning of the list
-                this.todos.unshift({
-                    title : newTodo.title,
+            var trimmedTitle = trim(newTodo.title);
+            if (trimmedTitle.length > 0) {
+                // put new todo at the end of the list
+                this.todos.push({
+                    title : trimmedTitle,
                     completed : false,
                     editMode : false
                 });
