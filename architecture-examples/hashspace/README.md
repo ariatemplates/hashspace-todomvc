@@ -13,6 +13,7 @@ The [hashspace website](http://hashspace.ariatemplates.com/) is a great resource
 
 Here are some links you may find helpful:
 
+* [Getting started with Hashspace](http://hashspace.ariatemplates.com/start/)
 * [API Reference](http://hashspace.ariatemplates.com/api/)
 * [Playground](http://hashspace.ariatemplates.com/playground/)
 * [hashspace on GitHub](https://github.com/ariatemplates/hashspace/)

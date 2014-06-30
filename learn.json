@@ -1115,6 +1115,9 @@
 		"link_groups": [{
 			"heading": "Official Resources",
 			"links": [{
+				"name": "Getting started",
+				"url": "http://hashspace.ariatemplates.com/start"
+			}, {
 				"name": "API Reference",
 				"url": "http://hashspace.ariatemplates.com/api"
 			}, {
