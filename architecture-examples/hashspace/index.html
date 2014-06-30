@@ -26,10 +26,10 @@
       packaging: {
         preprocessors: [{
           pattern: /\.hsp$/,
-          module: "hsp/compiler/compile"
+          module: 'hsp/compiler/compile'
         }, {
           pattern: /\.js$/,
-          module: "hsp/transpiler/transpile"
+          module: 'hsp/transpiler/transpile'
         }]
       }
     }
@@ -37,8 +37,11 @@
     <script type="text/javascript" src="http://hashspace.ariatemplates.com/dist/0.0.4/hashspace-noder.js"></script>
     <script type="text/javascript" src="http://hashspace.ariatemplates.com/dist/0.0.4/hashspace-noder-compiler.js"></script>
     <script type="application/x-noder">
-      var todos = require("./js/templates/todo.hsp").todos;
-      todos().render("todo");
+        (function () {
+            'use strict';
+            var todos = require('./js/templates/todo.hsp').todos;
+            todos().render('todo');
+        })();
     </script>
     <script type="text/javascript" src="bower_components/todomvc-common/base.js"></script>
 </head>
