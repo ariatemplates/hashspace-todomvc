@@ -109,7 +109,7 @@
             if (!this.editTodo.title) {
                 this.remove(todo); // remove todo if title is empty
             } else {
-                todo.title = this.editTodo.title;
+                todo.title = trim(this.editTodo.title);
                 todo.editMode = false;
             }
             return false;
