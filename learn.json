@@ -1104,6 +1104,34 @@
 			}]
 		}]
 	},
+	"hashspace": {
+		"name": "Hashspace",
+		"description": "Hashspace is a powerful and lightweight JavaScript template engine that focuses on simplicity and efficiency.",
+		"homepage": "hashspace.ariatemplates.com",
+		"examples": [{
+			"name": "Architecture Example",
+			"url": "labs/architecture-examples/hashspace"
+		}],
+		"link_groups": [{
+			"heading": "Official Resources",
+			"links": [{
+				"name": "API Reference",
+				"url": "http://hashspace.ariatemplates.com/api"
+			}, {
+				"name": "Playground",
+				"url": "http://hashspace.ariatemplates.com/playground"
+			}, {
+				"name": "Hashspace on GitHub",
+				"url": "https://github.com/ariatemplates/hashspace/"
+			}]
+		}, {
+			"heading": "Community",
+			"links": [{
+				"name": "Forums",
+				"url": "http://ariatemplates.com/forum"
+			}]
+		}]
+	},
 	"javascript": {
 		"name": "JavaScript",
 		"description": "JavaScript® (often shortened to JS) is a lightweight, interpreted, object-oriented language with first-class functions, most known as the scripting language for Web pages, but used in many non-browser environments as well such as node.js or Apache CouchDB.",
