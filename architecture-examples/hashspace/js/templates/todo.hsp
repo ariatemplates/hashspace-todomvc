@@ -46,10 +46,10 @@ var TodoUICtrl=require("../controllers/todoctrl").TodoUICtrl;
 					<strong>{ctrl.remainingCount}</strong>
 					// TODO better way to pluralize
 					{if ctrl.remainingCount===1}
-                    item left
-                  {else}
-                    items left
-                  {/if}
+						item left
+					{else}
+						items left
+					{/if}
 				</span>
 				<ul id="filters">
 					<#filterLink ctrl="{ctrl}" label="All" filter="all"/>
@@ -82,7 +82,9 @@ var TodoUICtrl=require("../controllers/todoctrl").TodoUICtrl;
 		{if todo.editMode}
 			<form onsubmit="{ctrl.doneEditing(todo)}" class="editform">
 				// TODO focus on node creation
-				<input type="text" class="edit" title="{ctrl.editTodo.title}" value="{ctrl.editTodo.title}" onblur="{ctrl.doneEditing(todo)}"/>
+				<input type="text" class="edit" title="{ctrl.editTodo.title}" value="{ctrl.editTodo.title}"
+					onblur="{ctrl.doneEditing(todo)}"
+					onkeydown="{ctrl.todoEditKeydown(event, todo)}"  />
 			</form>
 		{else}
 			<div class="view">

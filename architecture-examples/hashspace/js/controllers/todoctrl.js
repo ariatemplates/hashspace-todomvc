@@ -17,6 +17,7 @@
 (function () {
     'use strict';
 
+    var ESCAPE_KEY = 27;
     function trim(str) {
         return str.replace(/^\s+|\s+$/g, '');
     };
@@ -113,6 +114,15 @@
                 todo.editMode = false;
             }
             return false;
+        },
+
+        /**
+         * Undo editing when user hits ESC on keyboard
+         */
+        todoEditKeydown : function (event, todo) {
+            if (event.keyCode == ESCAPE_KEY) {
+                todo.editMode = false;
+            }
         },
 
         /**
