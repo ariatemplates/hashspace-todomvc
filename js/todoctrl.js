@@ -16,7 +16,7 @@
 
 // Parts of this code has been copied from the angular MVC controller at
 // https://github.com/addyosmani/todomvc/blob/gh-pages/architecture-examples/angularjs/js/controllers/todoCtrl.js
-var klass = require("hsp/klass"), $set = require("hsp/$set");
+var klass = require("hsp/klass");
 
 /**
  * Main Todo Controller
@@ -50,9 +50,9 @@ var TodoCtrl = klass({
             if (todos[i].completed)
                 doneCount++;
         }
-        $set(this, "doneCount", doneCount);
-        $set(this, "remainingCount", sz - doneCount);
-        $set(this, "allChecked", doneCount === sz);
+        this.doneCount = doneCount;
+        this.remainingCount = sz - doneCount;
+        this.allChecked = (doneCount === sz);
     },
 
     /**
@@ -69,7 +69,7 @@ var TodoCtrl = klass({
                 completed : false,
                 editMode : false
             });
-            $set(newTodo, "title", "");
+            newTodo.title  = "";
             this.syncData();
         }
         return false; // to prevent default behaviour
@@ -80,8 +80,8 @@ var TodoCtrl = klass({
      */
     edit : function (todo) {
         this.doneEditingAll();
-        $set(todo, "editMode", true);
-        $set(this.editTodo, "title", todo.title);
+        todo.editMode = true;
+        this.editTodo.title = todo.title;
     },
 
     /**
@@ -100,8 +100,8 @@ var TodoCtrl = klass({
         if (!this.editTodo.title) {
             this.remove(todo); // remove todo if title is empty
         } else {
-            $set(todo, "title", this.editTodo.title);
-            $set(todo, "editMode", false);
+            todo.title = this.editTodo.title;
+            todo.editMode = false;
         }
         return false;
     },
@@ -124,17 +124,17 @@ var TodoCtrl = klass({
      * cancel the edition for a todo a keeps the previous value
      */
     cancelEditing : function (todo) {
-        $set(this.editTodo, "title", "");
-        $set(todo, "editMode", false);
+        this.editTodo.title = "";
+        todo.editMode = false;
     },
 
     /**
      * remove all the completed todos from the todo list
      */
     clearDoneTodos : function () {
-        $set(this, "todos", this.todos.filter(function (val) {
+        this.todos = this.todos.filter(function (val) {
             return !val.completed;
-        }));
+        });
         this.syncData();
     },
 
@@ -144,7 +144,7 @@ var TodoCtrl = klass({
     toggleAllDone : function () {
         var newState = this.allChecked, todos = this.todos;
         for (var i = 0, sz = todos.length; sz > i; i++) {
-            $set(todos[i], "completed", newState);
+            todos[i].completed = newState;
         }
         this.syncData();
     }
@@ -185,7 +185,7 @@ exports.TodoUICtrl = klass({
      */
     selectFilter : function (filter) {
         if (filter === "all" || filter === "active" || filter === "completed") {
-            $set(this, "filter", filter);
+            this.filter = filter;
         }
     }
 });
