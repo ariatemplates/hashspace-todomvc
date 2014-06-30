@@ -40,6 +40,11 @@ Running the tests
 
 (supposing you have phantomjs in `PATH` already)
 
+Running just one test (dev mode)
+================================
+
+    mocha allTests.js  --reporter spec --browser=phantomjs --grep "should trim text input"
+
 Current status of tests
 =======================
 
