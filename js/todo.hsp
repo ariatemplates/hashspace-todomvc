@@ -19,41 +19,45 @@ var TodoUICtrl=require("./todoctrl").TodoUICtrl;
 /**
  * Main TODO template
  */
-{export template todos using c:TodoUICtrl}
+{export template todos using ctrl:TodoUICtrl}
 	<section id="todoapp" onselectstart="return false;">
 		<header id="header">
 			<h1>todos</h1>
-			<form id="todo-form" onsubmit="{c.addTodo()}">
+			<form id="todo-form" onsubmit="{ctrl.addTodo()}">
 				// TODO support autofocus attribute
-				<input id="new-todo" autocomplete="off" autofocus placeholder="What needs to be done?" value="{c.newTodo.title}"/>
+				<input id="new-todo" autocomplete="off" autofocus placeholder="What needs to be done?" value="{ctrl.newTodo.title}"/>
 			</form>
 		</header>
-		{if c.todos.length}
+		{if ctrl.todos.length}
 			<section id="main">
 				// TODO remove fixed ids
-				<input id="toggle-all" type="checkbox" value="{c.allChecked}" title="Mark all done" onchange="{c.toggleAllDone()}"/>
+				<input id="toggle-all" type="checkbox" value="{ctrl.allChecked}" title="Mark all done" onchange="{ctrl.toggleAllDone()}"/>
 				<label for="toggle-all">Mark all as complete</label>
 				<ul id="todo-list">
-					{foreach todo in c.todos}
-						{if c.isInFilter(todo,c.filter)}
-							<#todoItem todo="{todo}" c="{c}"/>
+					{foreach todo in ctrl.todos}
+						{if ctrl.isInFilter(todo, ctrl.filter)}
+							<#todoItem todo="{todo}" ctrl="{ctrl}"/>
 						{/if}
 					{/foreach}
 				</ul>
 			</section>
 			<footer id="footer">
 				<span id="todo-count">
-					<strong>{c.remainingCount}</strong>
+					<strong>{ctrl.remainingCount}</strong>
 					// TODO better way to pluralize
-					{if c.remainingCount===1} item left {else} items left {/if}
+					{if ctrl.remainingCount===1}
+                    item left
+                  {else}
+                    items left
+                  {/if}
 				</span>
 				<ul id="filters">
-					<#filterLink c="{c}" label="All" filter="all"/>
-					<#filterLink c="{c}" label="Active" filter="active"/>
-					<#filterLink c="{c}" label="Completed" filter="completed"/>
+					<#filterLink ctrl="{ctrl}" label="All" filter="all"/>
+					<#filterLink ctrl="{ctrl}" label="Active" filter="active"/>
+					<#filterLink ctrl="{ctrl}" label="Completed" filter="completed"/>
 				</ul>
-				{if c.doneCount}
-					<button id="clear-completed" onclick="{c.clearDoneTodos()}">Clear completed ({c.doneCount})</button>
+				{if ctrl.doneCount}
+					<button id="clear-completed" onclick="{ctrl.clearDoneTodos()}">Clear completed ({ctrl.doneCount})</button>
 				{/if}
 			</footer>
 		{/if}
@@ -71,20 +75,20 @@ var TodoUICtrl=require("./todoctrl").TodoUICtrl;
 /**
  * template displaying the todo element
  * @param todo the todo data model
- * @param c the general controller
+ * @param ctrl the general controller
  */
-{template todoItem(todo, c)}
+{template todoItem(todo, ctrl)}
 	<li class="{'completed':todo.completed, 'editing':todo.editMode}">
 		{if todo.editMode}
-			<form onsubmit="{c.doneEditing(todo)}" class="editform">
+			<form onsubmit="{ctrl.doneEditing(todo)}" class="editform">
 				// TODO focus on node creation
-				<input type="text" class="edit" title="{c.editTodo.title}" value="{c.editTodo.title}" onblur="{c.doneEditing(todo)}"/>
+				<input type="text" class="edit" title="{ctrl.editTodo.title}" value="{ctrl.editTodo.title}" onblur="{ctrl.doneEditing(todo)}"/>
 			</form>
 		{else}
 			<div class="view">
-				<input class="toggle" type="checkbox" value="{todo.completed}" onchange="{c.syncData()}"/>
-				<label ondblclick="{c.edit(todo)}">{todo.title}</label>
-				<button class="destroy" onclick="{c.remove(todo)}"></button>
+				<input class="toggle" type="checkbox" value="{todo.completed}" onchange="{ctrl.syncData()}"/>
+				<label ondblclick="{ctrl.edit(todo)}">{todo.title}</label>
+				<button class="destroy" onclick="{ctrl.remove(todo)}"></button>
 			</div>
 		{/if}
 	</li>
@@ -97,9 +101,9 @@ var TodoUICtrl=require("./todoctrl").TodoUICtrl;
  * @param {String} filter the corresponding filter code used in the data model - e.g. "all"
  * @param c the general controller
  */
-{template filterLink(label, filter, c)}
+{template filterLink(label, filter, ctrl)}
 	<li>
-		<a onclick="{c.selectFilter(filter)}" title="{label}" class="{label} {'selected':c.filter===filter}">
+		<a onclick="{ctrl.selectFilter(filter)}" title="{label}" class="{label} {'selected':ctrl.filter===filter}">
 			{label}
 		</a>
 	</li>
