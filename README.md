@@ -45,6 +45,18 @@ Running just one test (dev mode)
 
     mocha allTests.js  --reporter spec --browser=phantomjs --grep "should trim text input"
 
+
+Running the app in the browser
+==============================
+
+    http-server -p 8080
+
+Go to http://localhost:8080/ in the browser
+
+Also once you push to `gh-pages` in your fork, after a few minutes a URL like below should work:
+
+http://jakub-g.github.io/hashspace-todomvc/
+
 Current status of tests
 =======================
 
