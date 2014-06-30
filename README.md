@@ -66,8 +66,8 @@ Current status of tests
        New Todo
          √ should allow me to add todo items (531ms)
          √ should clear text input field when an item is added (219ms)
-         1) should append new items to the bottom of the list
-         2) should trim text input
+         √ should append new items to the bottom of the list
+         √ should trim text input
          √ should show #main and #footer when items added (401ms)
        Mark all as completed
          3) should allow me to mark all items as completed
@@ -82,9 +82,9 @@ Current status of tests
          √ should hide other controls when editing (638ms)
          √ should save edits on enter (906ms)
          √ should save edits on blur (1027ms)
-         6) should trim entered text
+         √ should trim entered text
          √ should remove the item if an empty text string was entered (814ms)
-         7) should cancel edits on escape
+         √ should cancel edits on escape
        Counter
          √ should display the current number of todo items (364ms)
        Clear completed button
@@ -99,5 +99,5 @@ Current status of tests
          √ should highlight the currently applied filter (1028ms)
 
 
-     17 passing (2m)
-     11 failing
+     21 passing (2m)
+     7 failing
