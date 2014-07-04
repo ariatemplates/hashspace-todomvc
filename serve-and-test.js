@@ -26,17 +26,15 @@ var bootMocha = function () {
 		stdio : "inherit"
 	};
 	var child = spawn(cmd, args, opts);
-	child.on('exit', function () {
+	child.on('exit', function (code) {
 		if (server) {
-			server.close(terminate);
+			server.close(function() {
+				process.exit(code);
+			});
 		} else {
-			terminate();
+			process.exit(code);
 		}
 	});
-};
-
-var terminate = function () {
-	process.exit(0);
 };
 
 bootServer();
