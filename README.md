@@ -1,3 +1,5 @@
+[![Build Status](https://secure.travis-ci.org/ariatemplates/hashspace-todomvc.png)](http://travis-ci.org/ariatemplates/hashspace-todomvc)
+
 Hashspace TodoMVC
 =================
 
@@ -25,7 +27,15 @@ Backbone sample app:
 > https://github.com/tastejs/todomvc/tree/gh-pages/architecture-examples/backbone
 
 
-Running the tests
+Running the tests with PhantomJS and a temporary webserver on port 8000
+=================
+
+    ./serve-and-test.js
+
+	This is what is run on Travis CI: a throwaway server is established on port 8000, and mocha suite
+	is invoked via grunt task defined in `browser-tests/gruntfile.js`.
+
+Running the tests with long-lived server and configurable browser from command line:
 =================
 
     # in first shell window
@@ -36,9 +46,10 @@ Running the tests
     # in second shell window
     cd browser-tests
     npm install -g mocha
+	npm install
     mocha allTests.js  --reporter spec --browser=phantomjs
 
-(supposing you have phantomjs in `PATH` already)
+(supposing you have phantomjs in `PATH` already; to run with chrome, pass `chrome` instead or omit it)
 
 Running just one test (dev mode)
 ================================
@@ -62,7 +73,7 @@ TODO
 
 - routing
 - local storage
--
+- some code style refactorings
 
 Current status of tests
 =======================

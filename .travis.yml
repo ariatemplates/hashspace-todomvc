@@ -1,0 +1,14 @@
+language: node_js
+node_js:
+  - "0.10"
+
+branches:
+  only:
+    - gh-pages
+
+install:
+  - npm install serve-static finalhandler
+  - cd browser-tests && npm install && cd ..
+
+script:
+  - node serve-and-test.js
