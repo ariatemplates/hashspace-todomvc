@@ -31,7 +31,7 @@ var TodoUICtrl=require("../controllers/todoctrl").TodoUICtrl;
 		{if ctrl.todos.length}
 			<section id="main">
 				// TODO remove fixed ids
-				<input id="toggle-all" type="checkbox" value="{ctrl.allChecked}" title="Mark all done" onchange="{ctrl.toggleAllDone()}"/>
+				<input id="toggle-all" type="checkbox" value="{ctrl.allChecked}" title="Mark all done" onclick="{ctrl.toggleAllDone()}"/>
 				<label for="toggle-all">Mark all as complete</label>
 				<ul id="todo-list">
 					{foreach todo in ctrl.todos}

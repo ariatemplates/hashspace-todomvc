@@ -70,9 +70,9 @@ Current status of tests
          √ should trim text input
          √ should show #main and #footer when items added (401ms)
        Mark all as completed
-         3) should allow me to mark all items as completed
-         4) should allow me to clear the completion state of all items
-         5) complete all checkbox should update state when items are completed / cleared
+         √ should allow me to mark all items as completed
+         √ should allow me to clear the completion state of all items
+         √ complete all checkbox should update state when items are completed / cleared
        Item
          √ should allow me to mark items as complete (890ms)
          √ should allow me to un-mark items as complete (934ms)
