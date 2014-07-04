@@ -57,6 +57,13 @@ Also once you push to `gh-pages` in your fork, after a few minutes a URL like be
 
 http://jakub-g.github.io/hashspace-todomvc/
 
+TODO
+====
+
+- routing
+- local storage
+-
+
 Current status of tests
 =======================
 
@@ -88,9 +95,9 @@ Current status of tests
        Counter
          √ should display the current number of todo items (364ms)
        Clear completed button
-         8) should display the number of completed items
-         9) should remove completed items when clicked
-         10) should be hidden when there are no items that are completed
+         √ should display the number of completed items
+         √ should remove completed items when clicked
+         √ should be hidden when there are no items that are completed
        Routing
          √ should allow me to display active items (714ms)
          11) should respect the back button
@@ -99,5 +106,5 @@ Current status of tests
          √ should highlight the currently applied filter (1028ms)
 
 
-     21 passing (2m)
-     7 failing
+     26 passing (2m)
+     1 failing

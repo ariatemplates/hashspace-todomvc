@@ -88,7 +88,7 @@ var TodoUICtrl=require("../controllers/todoctrl").TodoUICtrl;
 			</form>
 		{else}
 			<div class="view">
-				<input class="toggle" type="checkbox" value="{todo.completed}" onchange="{ctrl.syncData()}"/>
+				<input class="toggle" type="checkbox" value="{todo.completed}" onclick="{ctrl.syncData()}"/>
 				<label ondblclick="{ctrl.edit(todo)}">{todo.title}</label>
 				<button class="destroy" onclick="{ctrl.remove(todo)}"></button>
 			</div>
