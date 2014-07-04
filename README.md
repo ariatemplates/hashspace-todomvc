@@ -6,10 +6,15 @@ Hashspace TodoMVC
 The directory structure of this repo is equivalent to the official TodoMVC repo, to allow easier merging
 once the app is ready.
 
+This readme is implementor-centered.
+
 Go to `architecture-examples/hashspace` to read more about Hashspace TodoMVC.
 
+Important note: the `browser-tests` folder was taken from https://github.com/tastejs/todomvc/tree/gh-pages/browser-tests
+and no files in that folder should be modified in this repo (other than syncing with the todomvc repo).
+
 TodoMVC reference Links
-=======================
+-----------------------
 
 App Spec:
 > https://github.com/tastejs/todomvc/blob/gh-pages/app-spec.md
@@ -28,15 +33,15 @@ Backbone sample app:
 
 
 Running the tests with PhantomJS and a temporary webserver on port 8000
-=================
+----------------------
 
-    ./serve-and-test.js
+    node serve-and-test.js
 
-	This is what is run on Travis CI: a throwaway server is established on port 8000, and mocha suite
-	is invoked via grunt task defined in `browser-tests/gruntfile.js`.
+This is what is run on Travis CI: a throwaway server is established on port 8000, and mocha suite
+is invoked via grunt task defined in `browser-tests/gruntfile.js`.
 
 Running the tests with long-lived server and configurable browser from command line:
-=================
+----------------------
 
     # in first shell window
     cd /
@@ -52,14 +57,14 @@ Running the tests with long-lived server and configurable browser from command l
 (supposing you have phantomjs in `PATH` already; to run with chrome, pass `chrome` instead or omit it)
 
 Running just one test (dev mode)
-================================
+--------------------------------
 
     mocha allTests.js  --reporter spec --browser=phantomjs --grep "should trim text input"
 
-
 Running the app in the browser
-==============================
+------------------------------
 
+    npm install -g http-server
     http-server -p 8080
 
 Go to http://localhost:8080/ in the browser
@@ -69,14 +74,14 @@ Also once you push to `gh-pages` in your fork, after a few minutes a URL like be
 http://jakub-g.github.io/hashspace-todomvc/
 
 TODO
-====
+----
 
 - routing
 - local storage
-- some code style refactorings
+- some code style refactorings (tabs not spaces, apostrophes in JS vs quotes in HTML, components in separate files)
 
-Current status of tests
-=======================
+Current status of the test suite
+-----------------------
 
      TodoMVC - hashspace
        No Todos
@@ -117,5 +122,5 @@ Current status of tests
          √ should highlight the currently applied filter (1028ms)
 
 
-     26 passing (2m)
+     27 passing (2m)
      1 failing
