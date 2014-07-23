@@ -141,9 +141,10 @@
 		 */
 		doneEditingAll : function() {
 			// cancel current edit if any
-			var index, length, todo;
-			for (index = 0, length = this.todos.length; index < length; index++) {
-				todo = this.todos[index];
+			var todos, index, length, todo;
+			todos = this.todos;
+			for (index = 0, length = todos.length; index < length; index++) {
+				todo = todos[index];
 
 				if (todo.editMode) {
 					this.doneEditing(todo);
@@ -174,9 +175,9 @@
 		 */
 		toggleAllDone : function () {
 			var newState = this.allChecked;
-			var todos = this.todos;
+			var todos, index, length, todo;
 
-			var index, length, todo;
+			todos = this.todos;
 			for (index = 0, length = todos.length; index < length; index++) {
 				todo = todos[index];
 
@@ -186,6 +187,32 @@
 			this.syncData();
 		}
 
+	});
+
+
+
+	var director = require("libs/director");
+
+	/**
+	 * Filter specifications for the list of todos.
+	 */
+	var Filter = klass({
+		$constructor : function (names) {
+			this.names = names;
+		},
+
+		match : function (name) {
+			var names, index, length;
+
+			names = this.names
+			for (index = 0, length = names.length; index < length; index++) {
+				if (names[index] === name) {
+					return true;
+				}
+			}
+
+			return false;
+		}
 	});
 
 	/**
@@ -203,19 +230,47 @@
 			// call super constructor
 			TodoCtrl.$constructor.call(this);
 			// add ui-items to the data model
-			this.filter = "all"; // possible values: "all", "active", "completed"
+
+			// ------------------------------------------------------- filtering
+
+			var filtersSpecs, filters, filtersMap;
+			var index, length;
+			var filter;
+
+			filtersSpecs = [
+				['all', ''],
+				['active'],
+				['completed', '!']
+			];
+			filters = [];
+			filtersMap = {};
+
+			for (index = 0, length = filtersSpecs.length; index < length; index++) {
+				filter = new Filter(filtersSpecs[index]);
+				filters.push(filter);
+				filtersMap[filter.names[0]] = filter;
+			}
+
+			this.filters = filters;
+			this.filtersMap = filtersMap;
+
+			this.router = director.Router({
+			    '/': this.selectFilter.bind(this, 'all'),
+			    '/!': this.selectFilter.bind(this, 'completed'),
+			    '/:filter': this.selectFilter.bind(this)
+			}).init();
+
+			this.filter = this.filtersMap['all'];
 		},
 
 		/**
 		 * Tells if a todo item should be displayed based on the current UI filter.
 		 */
 		isInFilter : function (todo, filter) {
-			var filter = this.filter;
-
-			if (filter === "active" && todo.completed)
+			if (filter === this.filtersMap['active'] && todo.completed)
 				return false;
 
-			if (filter === "completed" && !todo.completed)
+			if (filter === this.filtersMap['completed'] && !todo.completed)
 				return false;
 
 			return true;
@@ -224,8 +279,11 @@
 		/**
 		 * Select a new filter.
 		 */
-		selectFilter : function (filter) {
-			if (filter === "all" || filter === "active" || filter === "completed") {
+		selectFilter : function (filterName) {
+			var filter;
+
+			filter = this.filtersMap[filterName];
+			if (filter != null) {
 				this.filter = filter;
 			}
 		}

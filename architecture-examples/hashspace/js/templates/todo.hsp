@@ -13,7 +13,9 @@
  * limitations under the License.
  */
 
-var TodoUICtrl=require("../controllers/todoctrl").TodoUICtrl;
+var TodoUICtrl = require("../controllers/todoctrl").TodoUICtrl;
+
+
 
 /**
  * Main todo template.
@@ -44,7 +46,7 @@ var TodoUICtrl=require("../controllers/todoctrl").TodoUICtrl;
 					<strong>{ctrl.remainingCount}</strong> item{ctrl.remainingCount !== 1 ? 's' : ''} left
 				</span>
 				<ul id="filters">
-					<li><#filterLink ctrl="{ctrl}" label="All" filter="all"/></li>
+					<li><#filterLink ctrl="{ctrl}" label="All" filter=""/></li>
 					<li><#filterLink ctrl="{ctrl}" label="Active" filter="active"/></li>
 					<li><#filterLink ctrl="{ctrl}" label="Completed" filter="completed"/></li>
 				</ul>
@@ -98,7 +100,7 @@ var TodoUICtrl=require("../controllers/todoctrl").TodoUICtrl;
  * @param ctrl The general controller.
  */
 {template filterLink(label, filter, ctrl)}
-	<a onclick="{ctrl.selectFilter(filter)}" title="{label}" class="{label} {'selected': ctrl.filter === filter}">
+	<a href="#/{filter}" title="{label}" class="{'selected': ctrl.filter.match(filter)}">
 		{label}
 	</a>
 {/template}
