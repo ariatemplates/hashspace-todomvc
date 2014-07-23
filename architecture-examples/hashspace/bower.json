@@ -1,8 +1,8 @@
 {
-    "name": "hashspace-todomvc",
-    "private" : true,
-    "version": "0.0.0",
-    "dependencies": {
-        "todomvc-common": "0.1.9"
-    }
+	"name": "todomvc-hashspace",
+	"private" : true,
+	"version": "0.0.0",
+	"dependencies": {
+		"todomvc-common": "0.1.9"
+	}
 }

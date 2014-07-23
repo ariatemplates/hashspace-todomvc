@@ -1,4 +1,3 @@
-
 /*
  * Copyright 2014 Amadeus s.a.s.
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -17,7 +16,7 @@
 var TodoUICtrl=require("../controllers/todoctrl").TodoUICtrl;
 
 /**
- * Main TODO template
+ * Main todo template.
  */
 {export template todos using ctrl:TodoUICtrl}
 	<section id="todoapp" onselectstart="return false;">
@@ -30,7 +29,6 @@ var TodoUICtrl=require("../controllers/todoctrl").TodoUICtrl;
 		</header>
 		{if ctrl.todos.length}
 			<section id="main">
-				// TODO remove fixed ids
 				<input id="toggle-all" type="checkbox" value="{ctrl.allChecked}" title="Mark all done" onclick="{ctrl.toggleAllDone()}"/>
 				<label for="toggle-all">Mark all as complete</label>
 				<ul id="todo-list">
@@ -43,20 +41,14 @@ var TodoUICtrl=require("../controllers/todoctrl").TodoUICtrl;
 			</section>
 			<footer id="footer">
 				<span id="todo-count">
-					<strong>{ctrl.remainingCount}</strong>
-					// TODO better way to pluralize
-					{if ctrl.remainingCount===1}
-						item left
-					{else}
-						items left
-					{/if}
+					<strong>{ctrl.remainingCount}</strong> item{ctrl.remainingCount !== 1 ? 's' : ''} left
 				</span>
 				<ul id="filters">
-					<#filterLink ctrl="{ctrl}" label="All" filter="all"/>
-					<#filterLink ctrl="{ctrl}" label="Active" filter="active"/>
-					<#filterLink ctrl="{ctrl}" label="Completed" filter="completed"/>
+					<li><#filterLink ctrl="{ctrl}" label="All" filter="all"/></li>
+					<li><#filterLink ctrl="{ctrl}" label="Active" filter="active"/></li>
+					<li><#filterLink ctrl="{ctrl}" label="Completed" filter="completed"/></li>
 				</ul>
-				{if ctrl.doneCount}
+				{if ctrl.doneCount > 0}
 					<button id="clear-completed" onclick="{ctrl.clearDoneTodos()}">Clear completed ({ctrl.doneCount})</button>
 				{/if}
 			</footer>
@@ -73,40 +65,40 @@ var TodoUICtrl=require("../controllers/todoctrl").TodoUICtrl;
 
 
 /**
- * template displaying the todo element
- * @param todo the todo data model
- * @param ctrl the general controller
+ * Template displaying a todo element.
+ *
+ * @param todo The todo data model.
+ * @param ctrl The general controller.
  */
 {template todoItem(todo, ctrl)}
-	<li class="{'completed':todo.completed, 'editing':todo.editMode}">
-		{if todo.editMode}
+	<li class="{'completed': todo.completed, 'editing': todo.editMode}">
+		{if !(todo.editMode)}
+			<div class="view">
+				<input class="toggle" type="checkbox" value="{todo.completed}" onclick="{ctrl.syncData()}"/>
+				<label ondblclick="{ctrl.edit(todo)}">{todo.title}</label>
+				<button class="destroy" onclick="{ctrl.remove(todo)}"></button>
+			</div>
+		{else}
 			<form onsubmit="{ctrl.doneEditing(todo)}" class="editform">
 				// TODO focus on node creation
 				<input type="text" class="edit" title="{ctrl.editTodo.title}" value="{ctrl.editTodo.title}"
 					onblur="{ctrl.doneEditing(todo)}"
 					onkeydown="{ctrl.todoEditKeydown(event, todo)}"  />
 			</form>
-		{else}
-			<div class="view">
-				<input class="toggle" type="checkbox" value="{todo.completed}" onclick="{ctrl.syncData()}"/>
-				<label ondblclick="{ctrl.edit(todo)}">{todo.title}</label>
-				<button class="destroy" onclick="{ctrl.remove(todo)}"></button>
-			</div>
 		{/if}
 	</li>
 {/template}
 
 
 /**
- * display a link to activate a filter on the todo list
- * @param {String} label the label to display in the link - e.g. "All"
- * @param {String} filter the corresponding filter code used in the data model - e.g. "all"
- * @param c the general controller
+ * Display a link to activate a filter on the todo list.
+ *
+ * @param {String} label The label to display in the link - e.g. "All".
+ * @param {String} filter The corresponding filter code used in the data model - e.g. "all".
+ * @param ctrl The general controller.
  */
 {template filterLink(label, filter, ctrl)}
-	<li>
-		<a onclick="{ctrl.selectFilter(filter)}" title="{label}" class="{label} {'selected':ctrl.filter===filter}">
-			{label}
-		</a>
-	</li>
+	<a onclick="{ctrl.selectFilter(filter)}" title="{label}" class="{label} {'selected': ctrl.filter === filter}">
+		{label}
+	</a>
 {/template}

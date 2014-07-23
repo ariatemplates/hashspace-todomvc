@@ -18,9 +18,12 @@
 	'use strict';
 
 	var ESCAPE_KEY = 27;
+
 	function trim(str) {
 		return str.replace(/^\s+|\s+$/g, '');
 	};
+
+
 
 	// Parts of this code has been copied from the angular MVC controller at
 	// https://github.com/addyosmani/todomvc/blob/gh-pages/architecture-examples/angularjs/js/controllers/todoCtrl.js
@@ -29,21 +32,20 @@
 	/**
 	 * Main Todo Controller
 	 */
-
 	var TodoCtrl = klass({
 		/**
-		 * Object constructor: intialization of the data model
+		 * Object constructor: initialization of the data model.
 		 */
 		$constructor : function () {
 			// todo structure used to create a new todo
 			this.newTodo = {title : ""};
-			// todo used for the edition so that cancelling edition change the initial todo
+			// todo used for the edition so that canceling edition change the initial todo
 			this.editTodo = {title : ""};
 			this.allChecked = false; // tells if all tasks are checked (cf. syncData)
 			this.remainingCount = 1; // number of remaining tasks (cf. syncData)
-			this.doneCount = 0;	  // number of items done (cf. syncData)
+			this.doneCount = 0; // number of items done (cf. syncData)
 			this.todos = [ // todo list - empty by default
-			// sample item: {title:"task text", completed:false, editMode:false}
+				// sample item: {title: "task text", completed: false, editMode: false}
 			];
 		},
 
@@ -53,25 +55,33 @@
 		 * loops..)
 		 */
 		syncData : function () {
-			var doneCount = 0, todos = this.todos, sz = todos.length;
-			for (var i = 0; sz > i; i++) {
-				if (todos[i].completed)
+			var doneCount = 0;
+			var todos = this.todos;
+
+			var index, size, todo;
+			for (index = 0, size = todos.length; index < size; index++) {
+				todo = todos[index];
+
+				if (todo.completed)
 					doneCount++;
 			}
+
 			this.doneCount = doneCount;
-			this.remainingCount = sz - doneCount;
-			this.allChecked = (doneCount === sz);
+			this.remainingCount = size - doneCount;
+			this.allChecked = (doneCount === size);
 		},
 
 		/**
-		 * add a new todo item from the newTodo structure in the data set
+		 * Add a new todo item from the newTodo structure in the data set.
 		 */
 		addTodo : function () {
 			this.doneEditingAll();
+
 			var newTodo = this.newTodo;
 
 			// ignore empty entries
 			var trimmedTitle = trim(newTodo.title);
+
 			if (trimmedTitle.length > 0) {
 				// put new todo at the end of the list
 				this.todos.push({
@@ -82,11 +92,12 @@
 				newTodo.title  = "";
 				this.syncData();
 			}
-			return false; // to prevent default behaviour
+
+			return false; // to prevent default behavior
 		},
 
 		/**
-		 * activate the edit mode for the current todo item and copies the todo values in the editTodo structure
+		 * Activate the edit mode for the current todo item and copies the todo values in the editTodo structure.
 		 */
 		edit : function (todo) {
 			this.doneEditingAll();
@@ -95,16 +106,16 @@
 		},
 
 		/**
-		 * remove a todo item from the todo list
+		 * Remove a todo item from the todo list.
 		 */
 		remove : function (todo) {
-			var idx = this.todos.indexOf(todo);
-			this.todos.splice(idx, 1);
+			var index = this.todos.indexOf(todo);
+			this.todos.splice(index, 1);
 			this.syncData();
 		},
 
 		/**
-		 * copy the value of the editTodo in the currently edited todo and remove the editMode flag
+		 * Copy the value of the editTodo in the currently edited todo and remove the editMode flag.
 		 */
 		doneEditing : function (todo) {
 			if (!this.editTodo.title) {
@@ -117,30 +128,31 @@
 		},
 
 		/**
-		 * Undo editing when user hits ESC on keyboard
+		 * Undo editing when user hits ESC on keyboard.
 		 */
 		todoEditKeydown : function (event, todo) {
-			if (event.keyCode == ESCAPE_KEY) {
+			if (event.keyCode === ESCAPE_KEY) {
 				todo.editMode = false;
 			}
 		},
 
 		/**
-		 * automatically close all todo in that may be in edit mode
+		 * Automatically close all todo in that may be in edit mode.
 		 */
 		doneEditingAll : function() {
 			// cancel current edit if any
-			var td;
-			for (var i=this.todos.length-1; i>-1; i--) {
-				td=this.todos[i];
-				if (td.editMode) {
-					this.doneEditing(td);
+			var index, length, todo;
+			for (index = 0, length = this.todos.length; index < length; index++) {
+				todo = this.todos[index];
+
+				if (todo.editMode) {
+					this.doneEditing(todo);
 				}
 			}
 		},
 
 		/**
-		 * cancel the edition for a todo a keeps the previous value
+		 * Cancel the edition for a todo a keeps the previous value.
 		 */
 		cancelEditing : function (todo) {
 			this.editTodo.title = "";
@@ -148,59 +160,69 @@
 		},
 
 		/**
-		 * remove all the completed todos from the todo list
+		 * Remove all the completed todos from the todo list.
 		 */
 		clearDoneTodos : function () {
 			this.todos = this.todos.filter(function (val) {
-				return !val.completed;
+				return !(val.completed);
 			});
 			this.syncData();
 		},
 
 		/**
-		 * Toggle all todo item completed states
+		 * Toggle all todo items' completed state.
 		 */
 		toggleAllDone : function () {
-			var newState = this.allChecked, todos = this.todos;
-			for (var i = 0, sz = todos.length; sz > i; i++) {
-				todos[i].completed = newState;
+			var newState = this.allChecked;
+			var todos = this.todos;
+
+			var index, length, todo;
+			for (index = 0, length = todos.length; index < length; index++) {
+				todo = todos[index];
+
+				todo.completed = newState;
 			}
+
 			this.syncData();
 		}
 
 	});
 
 	/**
-	 * UI Module Controller - dealing with the filter part and managing the template display
+	 * UI Module Controller - dealing with the filter part and managing the template display.
 	 */
 	exports.TodoUICtrl = klass({
 		$extends : TodoCtrl,
 
 		/**
-		 * Create a new panel object
-		 * @param {DOMElement} DOMElt a html DOM element where the panel should be displayed (optional)
+		 * Create a new panel object.
+		 *
+		 * @param {DOMElement} DOMElt A HTML DOM element where the panel should be displayed (optional).
 		 */
 		$constructor : function (DOMElt) {
 			// call super constructor
 			TodoCtrl.$constructor.call(this);
-			// add ui-items to the datamodel
-			this.filter = "all"; // possible value: "all" or "active" or "completed"
+			// add ui-items to the data model
+			this.filter = "all"; // possible values: "all", "active", "completed"
 		},
 
 		/**
-		 * Tells if a todo item should be displayed based on the current ui filter
+		 * Tells if a todo item should be displayed based on the current UI filter.
 		 */
 		isInFilter : function (todo, filter) {
-			var f = this.filter;
-			if (f === "active" && todo.completed)
+			var filter = this.filter;
+
+			if (filter === "active" && todo.completed)
 				return false;
-			if (f === "completed" && !todo.completed)
+
+			if (filter === "completed" && !todo.completed)
 				return false;
+
 			return true;
 		},
 
 		/**
-		 * Select a new filter
+		 * Select a new filter.
 		 */
 		selectFilter : function (filter) {
 			if (filter === "all" || filter === "active" || filter === "completed") {
@@ -208,5 +230,4 @@
 			}
 		}
 	});
-
 })();
