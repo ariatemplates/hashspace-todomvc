@@ -1,3 +1,8 @@
 .bower.json
-bower_components/*/readme.md
 bower_components/*/bower.json
+bower_components/*/readme.md
+
+bower_components/director/*
+!bower_components/director/build
+bower_components/director/build/*
+!bower_components/director/build/director.js
