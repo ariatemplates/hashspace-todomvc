@@ -11,4 +11,4 @@ install:
   - cd browser-tests && npm install && cd ..
 
 script:
-  - node serve-and-test.js
+  - node test

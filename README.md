@@ -38,7 +38,7 @@ Backbone sample app:
 ## Running the tests with PhantomJS and a temporary webserver on port 8000
 
 ```bash
-node serve-and-test.js
+node test
 ```
 
 This is what is run on Travis CI: a throwaway server is established on port 8000, and mocha suite
