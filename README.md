@@ -56,7 +56,7 @@ http-server -p 8000
 cd browser-tests
 npm install -g mocha
 npm install
-mocha allTests.js  --reporter spec --browser=phantomjs
+mocha allTests.js --no-timeouts --reporter spec --browser=phantomjs
 ```
 
 (supposing you have `phantomjs` in `PATH` already; to run with chrome, pass `chrome` instead or omit it)
@@ -64,7 +64,7 @@ mocha allTests.js  --reporter spec --browser=phantomjs
 ## Running just one test (development mode)
 
 ```bash
-mocha allTests.js  --reporter spec --browser=phantomjs --grep "should trim text input"
+mocha allTests.js --no-timeouts --reporter spec --browser=phantomjs --grep "should trim text input"
 ```
 
 ## Running the application in the browser
