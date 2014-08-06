@@ -1,0 +1,8 @@
+#!/bin/bash
+echo "Remember to start an HTTP server on port 8000 in a separate console window"
+
+# parentheses to run this in a subshell
+(
+cd browser-tests;
+mocha allTests.js --no-timeouts --reporter spec --browser=phantomjs
+)

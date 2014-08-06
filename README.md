@@ -53,18 +53,22 @@ npm install -g http-server
 http-server -p 8000
 
 # in second shell window
-cd browser-tests
 npm install -g mocha
-npm install
-mocha allTests.js  --reporter spec --browser=phantomjs
+cd browser-tests && npm install && cd -
+./test-phantom
 ```
 
-(supposing you have `phantomjs` in `PATH` already; to run with chrome, pass `chrome` instead or omit it)
+To run with PhantomJS, install `phantomjs` on your machine and make it visible in `PATH`.
+Then run `./test-phantom`.
+
+To run with Chrome, install [chromedriver 2.9](http://chromedriver.storage.googleapis.com/2.9/chromedriver_win32.zip) and make the
+  executable visible in your `PATH`.
+Then run `./test-chrome`.
 
 ## Running just one test (development mode)
 
 ```bash
-mocha allTests.js  --reporter spec --browser=phantomjs --grep "should trim text input"
+mocha allTests.js --no-timeouts --reporter spec --browser=phantomjs --grep "should trim text input"
 ```
 
 ## Running the application in the browser
