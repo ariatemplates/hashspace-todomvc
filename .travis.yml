@@ -2,9 +2,14 @@ language: node_js
 node_js:
   - "0.10"
 
+env:
+  global:
+    - secure: "C84pbYIZRPUnyXw07sVUlY4hP3Di1JjFAhxFD/HzwOFbi8xRW+/TxJUasTy0wt/CwQhH+lcCN7DGGX7fOIph0J/DGx5r+7cfNFnoLmeXoQHz+24cqHbEcyn8yntjJTJnM
+HWJ8GuMWmbFTcrfKily6UlN7oVvqcEWi4fNds+8BaE="
+
 branches:
   only:
-    - gh-pages
+    - master
 
 install:
   - npm install serve-static finalhandler
@@ -12,3 +17,7 @@ install:
 
 script:
   - node test
+
+after_success:
+ - chmod -R 777 ./ci-release.sh
+ - ./ci-release.sh
