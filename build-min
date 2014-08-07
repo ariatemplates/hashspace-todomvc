@@ -1,0 +1,9 @@
+#!/bin/bash
+
+# parentheses to run this in a subshell
+(
+cd architecture-examples/hashspace/min ;
+gulp
+)
+
+
