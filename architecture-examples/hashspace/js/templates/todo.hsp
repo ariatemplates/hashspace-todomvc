@@ -1,0 +1,106 @@
+/*
+ * Copyright 2014 Amadeus s.a.s.
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+var TodoUICtrl = require("../controllers/todoctrl").TodoUICtrl;
+
+
+
+/**
+ * Main todo template.
+ */
+{export template todos using ctrl:TodoUICtrl}
+	<section id="todoapp" onselectstart="return false;">
+		<header id="header">
+			<h1>todos</h1>
+			<form id="todo-form" onsubmit="{ctrl.addTodo()}">
+				// TODO support autofocus attribute
+				<input id="new-todo" autocomplete="off" autofocus placeholder="What needs to be done?" value="{ctrl.newTodo.title}"/>
+			</form>
+		</header>
+		{if ctrl.todos.length}
+			<section id="main">
+				<input id="toggle-all" type="checkbox" value="{ctrl.allChecked}" title="Mark all done" onclick="{ctrl.toggleAllDone()}"/>
+				<label for="toggle-all">Mark all as complete</label>
+				<ul id="todo-list">
+					{foreach todo in ctrl.todos}
+						{if ctrl.isInFilter(todo, ctrl.filter)}
+							<#todoItem todo="{todo}" ctrl="{ctrl}"/>
+						{/if}
+					{/foreach}
+				</ul>
+			</section>
+			<footer id="footer">
+				<span id="todo-count">
+					<strong>{ctrl.remainingCount}</strong> item{ctrl.remainingCount !== 1 ? 's' : ''} left
+				</span>
+				<ul id="filters">
+					<li><#filterLink ctrl="{ctrl}" label="All" filter=""/></li>
+					<li><#filterLink ctrl="{ctrl}" label="Active" filter="active"/></li>
+					<li><#filterLink ctrl="{ctrl}" label="Completed" filter="completed"/></li>
+				</ul>
+				{if ctrl.doneCount > 0}
+					<button id="clear-completed" onclick="{ctrl.clearDoneTodos()}">Clear completed ({ctrl.doneCount})</button>
+				{/if}
+			</footer>
+		{/if}
+	</section>
+	<footer id="info">
+		<p>Double-click to edit a todo</p>
+		<p>Credits: <a href="https://github.com/b-laporte">Bertrand Laporte</a> -
+			code derived from the <a href="http://todomvc.com/architecture-examples/angularjs">angular JS Todo example</a>
+		</p>
+		<p>Should be soon part of <a href="http://todomvc.com">TodoMVC</a></p>
+	</footer>
+{/template}
+
+
+/**
+ * Template displaying a todo element.
+ *
+ * @param todo The todo data model.
+ * @param ctrl The general controller.
+ */
+{template todoItem(todo, ctrl)}
+	<li class="{'completed': todo.completed, 'editing': todo.editMode}">
+		{if !(todo.editMode)}
+			<div class="view">
+				<input class="toggle" type="checkbox" value="{todo.completed}" onclick="{ctrl.syncData()}"/>
+				<label ondblclick="{ctrl.edit(todo)}">{todo.title}</label>
+				<button class="destroy" onclick="{ctrl.remove(todo)}"></button>
+			</div>
+		{else}
+			<form onsubmit="{ctrl.doneEditing(todo)}" class="editform">
+				// TODO focus on node creation
+				<input type="text" class="edit" title="{ctrl.editTodo.title}" value="{ctrl.editTodo.title}"
+					onblur="{ctrl.doneEditing(todo)}"
+					onkeydown="{ctrl.todoEditKeydown(event, todo)}"  />
+			</form>
+		{/if}
+	</li>
+{/template}
+
+
+/**
+ * Display a link to activate a filter on the todo list.
+ *
+ * @param {String} label The label to display in the link - e.g. "All".
+ * @param {String} filter The corresponding filter code used in the data model - e.g. "all".
+ * @param ctrl The general controller.
+ */
+{template filterLink(label, filter, ctrl)}
+	<a href="#/{filter}" title="{label}" class="{'selected': ctrl.filter.match(filter)}">
+		{label}
+	</a>
+{/template}
