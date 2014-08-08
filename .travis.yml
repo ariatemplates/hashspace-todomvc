@@ -16,8 +16,5 @@ install:
   - cd browser-tests && npm install && cd ..
 
 script:
-  - node test
-
-after_success:
  - chmod -R 777 ./ci-release.sh
  - ./ci-release.sh
