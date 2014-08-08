@@ -7,7 +7,7 @@ if [ "$TRAVIS_PULL_REQUEST" = "false" ] && [ "$TRAVIS_SECURE_ENV_VARS" = "true" 
     # deleting it on Travis to be able to commit to "gh-pages"
     rm .gitignore &&
     echo "Installing gulp and other build dependencies..." &&
-    npm install -g gulp &&
+    npm install -g gulp@3.8 &&
     npm install &&
     echo "Building minified version of hashspace-todomvc..." &&
     gulp &&

@@ -1,5 +1,7 @@
 #!/bin/bash
 
+echo "Remember to first 'npm install -g gulp' and 'npm install' in architecture-examples/hashspace/min"
+
 # parentheses to run this in a subshell
 (
 cd architecture-examples/hashspace/min ;
