@@ -5,32 +5,31 @@
 	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
 	<title>Hashspace • TodoMVC</title>
 	<link rel="stylesheet" href="bower_components/todomvc-common/base.css">
+	<!-- // see http://noder-js.ariatemplates.com/configuration.html -->
 	<script type="text/javascript" src="//ariatemplates.github.io/noder-js/dist/v1.5.0/noder.dev.js">
 	{
-		packaging: {
-			preprocessors: [{
-				pattern: /\.hsp$/,
-				module: 'hsp/compiler/compile'
-			}, {
-				pattern: /\.js$/,
-				module: 'hsp/transpiler/transpile'
-			}]
-		},
-
-		resolver: {
+		'resolver': {
 			'default': {
+				'libs': 'bower_components',
 				'bower_components': {
 					'director': {
+						'.': 'build',
 						'build': {
 							'.': 'director.js',
 							'director': '.'
-						},
-
-						'.': 'build'
+						}
 					}
-				},
-				'libs': 'bower_components'
+				}
 			}
+		},
+		'packaging': {
+			'preprocessors': [{
+				'pattern': /\.hsp$/,
+				'module': 'hsp/compiler/compile'
+			}, {
+				'pattern': /\.js$/,
+				'module': 'hsp/transpiler/transpile'
+			}]
 		}
 	}
 	</script>

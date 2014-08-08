@@ -31,22 +31,38 @@ gulp.task('makeIndex', function () {
     // This loads the HTML from inputFile into a 'virtual DOM' with jquery-like syntax
     var $ = cheerio.load(inputFile);
 
-    // get rid of noder script config, and use minified version
-    var noderScript = $('script[src$="noder.dev.js"]');
-    noderScript.attr("src", noderScript.attr("src").replace("noder.dev.js", "noder.min.js"));
-    noderScript.html('');
-
-    var hsNoderScript = $('script[src$="hashspace-noder.js"]');
-    hsNoderScript.attr("src", hsNoderScript.attr("src").replace("hashspace-noder.js", "hashspace-noder.min.js"));
-
     // get rid of hashspace-noder-compiler node entirely
     $('script[src$="hashspace-noder-compiler.js"]').remove();
 
+    // use minified hashspace-noder
+    var hsNoderScript = $('script[src$="hashspace-noder.js"]');
+    hsNoderScript.attr("src", hsNoderScript.attr("src").replace("hashspace-noder.js", "hashspace-noder.min.js"));
+
+    // use minified noder version
+    var noderScript = $('script[src$="noder.dev.js"]');
+    noderScript.attr("src", noderScript.attr("src").replace("noder.dev.js", "noder.min.js"));
+
+    // tweak noder config, since some files are one now one directory up
+    var noderConfig = noderScript.html();
+    noderConfig = eval('(' + noderConfig + ')'); // eval instead of JSON.parse since input has regexes
+
+    noderConfig['packaging'] = {
+        baseUrl: '../'
+    };
+    noderConfig['resolver']['default']['js'] = 'min/js';
+
+    noderConfig = JSON.stringify(noderConfig, null, "\t"); // output doesn't have regexes, can be stringified
+    noderScript.html(noderConfig);
+
+    // inline bower components are one dir up now too
+    $('script[src^="bower_components"]').each(function () {
+        $(this).attr('src', $(this).attr('src').replace('bower_components', '../bower_components'));
+    });;
+    $('link[href^="bower_components"]').each(function () {
+        $(this).attr('href', $(this).attr('href').replace('bower_components', '../bower_components'));
+    });
+
     var html = $.html();
-
-    // bower components are one dir up
-    html = html.replace(/bower_components/g, '../bower_components');
-
     fs.writeFileSync(_destIndex, html);
 });
 

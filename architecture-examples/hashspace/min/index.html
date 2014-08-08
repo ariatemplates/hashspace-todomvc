@@ -5,7 +5,27 @@
 	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
 	<title>Hashspace &#x2022; TodoMVC</title>
 	<link rel="stylesheet" href="../bower_components/todomvc-common/base.css">
-	<script type="text/javascript" src="//ariatemplates.github.io/noder-js/dist/v1.5.0/noder.min.js"></script>
+	<!-- // see http://noder-js.ariatemplates.com/configuration.html -->
+	<script type="text/javascript" src="//ariatemplates.github.io/noder-js/dist/v1.5.0/noder.min.js">{
+	"resolver": {
+		"default": {
+			"libs": "bower_components",
+			"bower_components": {
+				"director": {
+					".": "build",
+					"build": {
+						".": "director.js",
+						"director": "."
+					}
+				}
+			},
+			"js": "min/js"
+		}
+	},
+	"packaging": {
+		"baseUrl": "../"
+	}
+}</script>
 	<script type="text/javascript" src="//ariatemplates.github.io/hashspace/dist/0.0.4/hashspace-noder.min.js"></script>
 	
 	<script type="application/x-noder">
