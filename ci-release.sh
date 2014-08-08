@@ -3,6 +3,9 @@ if [ "$TRAVIS_PULL_REQUEST" = "false" ] && [ "$TRAVIS_SECURE_ENV_VARS" = "true" 
     git clone "https://github.com/${TRAVIS_REPO_SLUG}.git" -b gh-pages gh-pages &&
     # executing this still in the "master" root folder
     cd architecture-examples/hashspace/min &&
+    # gitignore is needed for developer to not commit "min" files to "master"
+    # deleting it on Travis to be able to commit to "gh-pages"
+    rm .gitignore &&
     echo "Installing gulp and other build dependencies..." &&
     npm install -g gulp &&
     npm install &&
