@@ -11,10 +11,6 @@ branches:
   only:
     - master
 
-install:
-  - npm install serve-static finalhandler
-  - cd browser-tests && npm install && cd ..
-
 script:
- - chmod -R 777 ./ci-release.sh
+ - chmod -R 777 ci-release.sh build-full
  - ./ci-release.sh
