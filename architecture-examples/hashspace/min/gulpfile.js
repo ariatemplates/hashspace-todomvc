@@ -3,30 +3,39 @@ var fs  = require('fs');
 var cheerio = require('cheerio');
 var gulp = require('gulp');
 var hsp = require('gulp-hashspace');
+var mkdirp = require('mkdirp');
 var rimraf = require('rimraf');
 
-var _srcFolder = '../js';
-var _destFolder = 'js';
-
-var _srcIndex = '../index.html';
-var _destIndex = 'index.html';
+var _srcFolder = '../';
+var _destFolder = '../../hashspace-min/';
 
 gulp.task('clean', function (done) {
-    rimraf(_destFolder, done);
+    rimraf(_destFolder, function () {
+        mkdirp(_destFolder, done);
+    })
 });
 
 /**
  * Compiles .hsp and .js hashspace files
  */
 gulp.task('hspCompile', ['clean'], function() {
-    gulp.src(_srcFolder + '/**/*.+(hsp|js)').pipe(hsp.process()).pipe(gulp.dest(_destFolder));
+    gulp.src(_srcFolder + 'js/**/*.+(hsp|js)').pipe(hsp.process()).pipe(gulp.dest(_destFolder + 'js'));
+});
+
+/**
+ * Copy bower components and other useful files to the min folder
+ */
+gulp.task('copyStatic', ['clean'], function() {
+    gulp.src(_srcFolder + 'bower_components/**/*').pipe(gulp.dest(_destFolder + 'bower_components'));
+    gulp.src(_srcFolder + '{.gitignore,LICENSE,bower.json}').pipe(gulp.dest(_destFolder));
+    gulp.src(_srcFolder + 'min/README.md').pipe(gulp.dest(_destFolder));
 });
 
 /**
  * Creates `min/index.html` out of `index.html` by stripping unnecessary parts
  */
-gulp.task('makeIndex', function () {
-    var inputFile = fs.readFileSync(_srcIndex).toString();
+gulp.task('makeIndex', ['clean'], function () {
+    var inputFile = fs.readFileSync(_srcFolder + 'index.html').toString();
 
     // This loads the HTML from inputFile into a 'virtual DOM' with jquery-like syntax
     var $ = cheerio.load(inputFile);
@@ -46,24 +55,13 @@ gulp.task('makeIndex', function () {
     var noderConfig = noderScript.html();
     noderConfig = eval('(' + noderConfig + ')'); // eval instead of JSON.parse since input has regexes
 
-    noderConfig['packaging'] = {
-        baseUrl: '../'
-    };
-    noderConfig['resolver']['default']['js'] = 'min/js';
+    delete noderConfig['packaging'];
 
     noderConfig = JSON.stringify(noderConfig, null, "\t"); // output doesn't have regexes, can be stringified
     noderScript.html(noderConfig);
 
-    // inline bower components are one dir up now too
-    $('script[src^="bower_components"]').each(function () {
-        $(this).attr('src', $(this).attr('src').replace('bower_components', '../bower_components'));
-    });;
-    $('link[href^="bower_components"]').each(function () {
-        $(this).attr('href', $(this).attr('href').replace('bower_components', '../bower_components'));
-    });
-
     var html = $.html();
-    fs.writeFileSync(_destIndex, html);
+    fs.writeFileSync(_destFolder + 'index.html', html);
 });
 
-gulp.task('default', ['hspCompile', 'makeIndex']);
+gulp.task('default', ['hspCompile', 'copyStatic', 'makeIndex']);

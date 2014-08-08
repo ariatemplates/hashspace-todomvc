@@ -1,3 +1,0 @@
-# this gitignore is needed for local development, it will be deleted during Travis build
-index.html
-js
