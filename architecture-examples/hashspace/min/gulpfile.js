@@ -31,8 +31,13 @@ gulp.task('makeIndex', function () {
     // This loads the HTML from inputFile into a 'virtual DOM' with jquery-like syntax
     var $ = cheerio.load(inputFile);
 
-    // get rid of noder script config
-    $('script[src^="http://noder-js.ariatemplates.com"]').html('');
+    // get rid of noder script config, and use minified version
+    var noderScript = $('script[src$="noder.dev.js"]');
+    noderScript.attr("src", noderScript.attr("src").replace("noder.dev.js", "noder.min.js"));
+    noderScript.html('');
+
+    var hsNoderScript = $('script[src$="hashspace-noder.js"]');
+    hsNoderScript.attr("src", hsNoderScript.attr("src").replace("hashspace-noder.js", "hashspace-noder.min.js"));
 
     // get rid of hashspace-noder-compiler node entirely
     $('script[src$="hashspace-noder-compiler.js"]').remove();
