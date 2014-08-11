@@ -2,14 +2,23 @@
 
 # Hashspace TodoMVC
 
-The directory structure of this repository is equivalent to the official TodoMVC repository, to allow easier merging
-once the application is ready.
+Implementation of [TodoMVC](http://todomvc.com) in [Hashspace](http://hashspace.ariatemplates.com)
 
 This _README_ is implementor-centered.
 
-Go to `architecture-examples/hashspace` to read more about Hashspace TodoMVC.
+Go to `architecture-examples/hashspace/README.md` to read more about Hashspace TodoMVC from user's perspective.
 
-Important note: the `browser-tests` folder was taken from https://github.com/tastejs/todomvc/tree/gh-pages/browser-tests
+## Preview URLs
+
+- [Hashspace-TodoMVC with in-browser compilation](http://ariatemplates.github.io/hashspace-todomvc/architecture-examples/hashspace)
+- [Hashspace-TodoMVC using precompiled templates](http://ariatemplates.github.io/hashspace-todomvc/architecture-examples/hashspace-min)
+
+# Structure
+
+The directory structure of this repository is equivalent to the official TodoMVC repository, to allow easier merging
+once the application is ready.
+
+*Important note*: the `browser-tests` folder was taken from `https://github.com/tastejs/todomvc/tree/gh-pages/browser-tests`
 and no files in that folder should be modified in this repository (other than syncing with the todomvc repository).
 
 ## TodoMVC reference Links
@@ -84,18 +93,13 @@ Go to http://localhost:8080/ in the browser
 
 The `master` branch on GitHub contains the source files only (not precompiled).
 
-Once the Travis build is green, a minified version is built by running the `gulp` build inside `min` folder. This consists of the following steps:
+A minified version is built automatically during Travis build by running the `gulp` build inside `min` folder. This consists of the following steps:
 
 - compiling `hsp` and `js` files with hashspace-gulp
 - replacing noder, its dependencies and config in `index.html`
-- the built versions of files are output to `min` folder and this is committed to `gh-pages` branch
-
-## URLs
-
-- Using `src` files:
-  - http://ariatemplates.github.io/hashspace-todomvc/
-- Using `min` files:
-  - http://ariatemplates.github.io/hashspace-todomvc/min/
+- the built versions of files are output to `../hashspace-min` folder
+- TodoMVC test suite is run on both hashspace and hashspace-min versions
+- If the build is green, both versions are deployed to `gh-pages` branch
 
 ## TODO
 
