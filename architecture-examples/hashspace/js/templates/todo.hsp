@@ -21,22 +21,22 @@ var TodoUICtrl = require("../controllers/todoctrl").TodoUICtrl;
  * Main todo template.
  */
 {export template todos using ctrl:TodoUICtrl}
-	<section id="todoapp" onselectstart="return false;">
+	<section id="todoapp">
 		<header id="header">
 			<h1>todos</h1>
 			<form id="todo-form" onsubmit="{ctrl.addTodo()}">
 				// TODO support autofocus attribute
-				<input id="new-todo" autocomplete="off" autofocus placeholder="What needs to be done?" value="{ctrl.newTodo.title}"/>
+				<input id="new-todo" placeholder="What needs to be done?" value="{ctrl.newTodo.title}" autocomplete="off" autofocus />
 			</form>
 		</header>
 		{if ctrl.todos.length}
 			<section id="main">
-				<input id="toggle-all" type="checkbox" value="{ctrl.allChecked}" title="Mark all done" onclick="{ctrl.toggleAllDone()}"/>
+				<input id="toggle-all" type="checkbox" value="{ctrl.allChecked}" title="Mark all done" onclick="{ctrl.toggleAllDone()}" />
 				<label for="toggle-all">Mark all as complete</label>
 				<ul id="todo-list">
 					{foreach todo in ctrl.todos}
 						{if ctrl.isInFilter(todo, ctrl.filter)}
-							<#todoItem todo="{todo}" ctrl="{ctrl}"/>
+							<#todoItem todo="{todo}" ctrl="{ctrl}" />
 						{/if}
 					{/foreach}
 				</ul>
@@ -46,9 +46,9 @@ var TodoUICtrl = require("../controllers/todoctrl").TodoUICtrl;
 					<strong>{ctrl.remainingCount}</strong> item{ctrl.remainingCount !== 1 ? 's' : ''} left
 				</span>
 				<ul id="filters">
-					<li><#filterLink ctrl="{ctrl}" label="All" filter=""/></li>
-					<li><#filterLink ctrl="{ctrl}" label="Active" filter="active"/></li>
-					<li><#filterLink ctrl="{ctrl}" label="Completed" filter="completed"/></li>
+					<li><#filterLink ctrl="{ctrl}" label="All" filter="" /></li>
+					<li><#filterLink ctrl="{ctrl}" label="Active" filter="active" /></li>
+					<li><#filterLink ctrl="{ctrl}" label="Completed" filter="completed" /></li>
 				</ul>
 				{if ctrl.doneCount > 0}
 					<button id="clear-completed" onclick="{ctrl.clearDoneTodos()}">Clear completed ({ctrl.doneCount})</button>
@@ -58,9 +58,10 @@ var TodoUICtrl = require("../controllers/todoctrl").TodoUICtrl;
 	</section>
 	<footer id="info">
 		<p>Double-click to edit a todo</p>
-		<p>Credits: <a href="https://github.com/b-laporte">Bertrand Laporte</a> -
-			code derived from the <a href="http://todomvc.com/architecture-examples/angularjs">angular JS Todo example</a>
-		</p>
+		<p>Credits:
+			<a href="https://github.com/b-laporte">Bertrand Laporte</a>,
+			<a href="https://github.com/jakub-g">Jakub Gieryluk</a>,
+			<a href="https://github.com/ymeine">Yannick Meine</a></p>
 		<p>Should be soon part of <a href="http://todomvc.com">TodoMVC</a></p>
 	</footer>
 {/template}
@@ -85,7 +86,7 @@ var TodoUICtrl = require("../controllers/todoctrl").TodoUICtrl;
 				// TODO focus on node creation
 				<input type="text" class="edit" title="{ctrl.editTodo.title}" value="{ctrl.editTodo.title}"
 					onblur="{ctrl.doneEditing(todo)}"
-					onkeydown="{ctrl.todoEditKeydown(event, todo)}"  />
+					onkeydown="{ctrl.todoEditKeydown(event, todo)}" />
 			</form>
 		{/if}
 	</li>

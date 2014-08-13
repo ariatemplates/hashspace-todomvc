@@ -101,8 +101,3 @@ A minified version is built automatically during Travis build by running the `gu
 - TodoMVC test suite is run on both hashspace and hashspace-min versions
 - If the build is green, both versions are deployed to `gh-pages` branch
 
-## TODO
-
-- local storage
-- some code style refactoring (tabulations not spaces, apostrophes in JS vs. quotes in HTML, components in separate files)
-
