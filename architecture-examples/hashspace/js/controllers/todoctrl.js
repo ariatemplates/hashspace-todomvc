@@ -18,6 +18,7 @@
 	'use strict';
 
 	var ESCAPE_KEY = 27;
+	var LOCALSTORAGE_KEY = 'todos-hashspace';
 
 	function trim(str) {
 		return str.replace(/^\s+|\s+$/g, '');
@@ -39,14 +40,20 @@
 		$constructor : function () {
 			// todo structure used to create a new todo
 			this.newTodo = {title : ""};
+
 			// todo used for the edition so that canceling edition change the initial todo
 			this.editTodo = {title : ""};
+
 			this.allChecked = false; // tells if all tasks are checked (cf. syncData)
-			this.remainingCount = 1; // number of remaining tasks (cf. syncData)
+			this.remainingCount = 0; // number of remaining tasks (cf. syncData)
 			this.doneCount = 0; // number of items done (cf. syncData)
-			this.todos = [ // todo list - empty by default
-				// sample item: {title: "task text", completed: false, editMode: false}
-			];
+
+			// todo list - empty by default
+			// item: {title: "task text", completed: false, editMode: false}
+			this.todos = JSON.parse(localStorage.getItem(LOCALSTORAGE_KEY)) || [];
+
+			// recompute data after reading from local storage
+			this.syncData();
 		},
 
 		/**
@@ -69,6 +76,29 @@
 			this.doneCount = doneCount;
 			this.remainingCount = size - doneCount;
 			this.allChecked = (doneCount === size);
+
+			localStorage.setItem(LOCALSTORAGE_KEY, this.serialize(this.todos));
+		},
+
+		/**
+		 * Removes metadata from data model and returns stringified JSON representation of it
+		 */
+		serialize : function (model) {
+			var newModel = [];
+			// First clone the object, removing metadata (with keys starting with "+")
+			// Also, get rid of 'editMode' from the model. Then serialize that
+			// TODO reimplement it in a better way once https://github.com/ariatemplates/hashspace/issues/238 is fixed
+			for (var i = 0; i < model.length; i++) {
+				var entry = model[i];
+				var newEntry = {};
+				for (var key in entry) {
+					if (key.charAt(0) != '+' && key != 'editMode') {
+						newEntry[key] = entry[key];
+					}
+				}
+				newModel.push(newEntry);
+			}
+			return JSON.stringify(newModel);
 		},
 
 		/**
