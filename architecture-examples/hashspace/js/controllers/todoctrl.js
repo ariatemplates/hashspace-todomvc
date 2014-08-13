@@ -132,6 +132,12 @@
 			this.doneEditingAll();
 			todo.editMode = true;
 			this.editTodo.title = todo.title;
+			setTimeout(function () {
+				var activeTodo = document.getElementById('active-todo');
+				if (activeTodo) {
+					activeTodo.focus();
+				}
+			}, 20);
 		},
 
 		/**

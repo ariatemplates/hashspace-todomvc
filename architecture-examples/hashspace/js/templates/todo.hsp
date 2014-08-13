@@ -83,8 +83,7 @@ var TodoUICtrl = require("../controllers/todoctrl").TodoUICtrl;
 			</div>
 		{else}
 			<form onsubmit="{ctrl.doneEditing(todo)}" class="editform">
-				// TODO focus on node creation
-				<input type="text" class="edit" title="{ctrl.editTodo.title}" value="{ctrl.editTodo.title}"
+				<input id="active-todo" type="text" class="edit" title="{ctrl.editTodo.title}" value="{ctrl.editTodo.title}"
 					onblur="{ctrl.doneEditing(todo)}"
 					onkeydown="{ctrl.todoEditKeydown(event, todo)}" />
 			</form>
