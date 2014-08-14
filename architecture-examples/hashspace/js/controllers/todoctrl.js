@@ -288,13 +288,15 @@
 			});
 			this.filtersMap = filtersMap;
 
+			// restore filter state from URL if possible, default to 'all'
+			var initFilterName = location.hash.slice(2) || 'all'; // omit leading '#/'
 			this.router = director.Router({
 			    '/': this.selectFilter.bind(this, 'all'),
 			    '/!': this.selectFilter.bind(this, 'completed'),
 			    '/:filter': this.selectFilter.bind(this)
-			}).init('/all');
+			}).init('/' + initFilterName);
 
-			this.filter = this.filtersMap['all'];
+			this.selectFilter(initFilterName);
 		},
 
 		/**
