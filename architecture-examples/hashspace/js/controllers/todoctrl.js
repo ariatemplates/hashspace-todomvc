@@ -47,7 +47,7 @@
 			this.remainingCount = 0;
 			this.doneCount = 0;
 
-			// hack for PhantomJS (since it's impossible to disable local storage or run a new profile each time)
+			// FIXME hack for PhantomJS (since it's impossible to disable local storage or run a new profile each time)
 			// https://github.com/ariya/phantomjs/issues/11055
 			if (window.callPhantom) {
 				localStorage.clear();
@@ -92,20 +92,18 @@
 		 * Removes metadata from data model and returns stringified JSON representation of it
 		 */
 		serialize : function (model) {
-			var newModel = [];
 			// First clone the object, removing metadata (with keys starting with '+')
 			// Also, get rid of 'editMode' from the model. Then serialize that
-			// TODO reimplement it in a better way once https://github.com/ariatemplates/hashspace/issues/238 is fixed
-			for (var i = 0; i < model.length; i++) {
-				var entry = model[i];
+			// FIXME reimplement it in a better way once https://github.com/ariatemplates/hashspace/issues/238 is fixed
+			var newModel = model.map(function (entry) {
 				var newEntry = {};
 				for (var key in entry) {
 					if (key.charAt(0) != '+' && key != 'editMode') {
 						newEntry[key] = entry[key];
 					}
 				}
-				newModel.push(newEntry);
-			}
+				return newEntry;
+			});
 			return JSON.stringify(newModel);
 		},
 
@@ -141,6 +139,8 @@
 			this.doneEditingAll();
 			todo.editMode = true;
 			this.editTodo.title = todo.title;
+
+			// FIXME find a better way to put the focus into the active todo
 			setTimeout(function () {
 				var activeTodo = document.getElementById('active-todo');
 				if (activeTodo) {
@@ -186,15 +186,11 @@
 		 */
 		doneEditingAll : function() {
 			// cancel current edit if any
-			var todos, index, length, todo;
-			todos = this.todos;
-			for (index = 0, length = todos.length; index < length; index++) {
-				todo = todos[index];
-
+			this.todos.forEach(function (todo) {
 				if (todo.editMode) {
 					this.doneEditing(todo);
 				}
-			}
+			}, this);
 		},
 
 		/**
@@ -219,16 +215,9 @@
 		 * Toggle all todo items' completed state.
 		 */
 		toggleAllDone : function () {
-			var newState = this.allChecked;
-			var todos, index, length, todo;
-
-			todos = this.todos;
-			for (index = 0, length = todos.length; index < length; index++) {
-				todo = todos[index];
-
-				todo.completed = newState;
-			}
-
+			this.todos.forEach(function (todo) {
+				todo.completed = this.allChecked;
+			}, this);
 			this.syncData();
 		}
 
