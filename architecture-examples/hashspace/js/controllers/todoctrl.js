@@ -67,16 +67,15 @@
 		 * loops..)
 		 */
 		syncData : function () {
-			var doneCount = 0;
 			var todos = this.todos;
 
-			for (var i = 0, allCount = todos.length; i < allCount; i++) {
-				var todo = todos[i];
-
-				if (todo.completed) {
+			var allCount = this.todos.length;
+			var doneCount = 0;
+			this.todos.forEach(function (todo) {
+				if(todo.completed) {
 					doneCount++;
 				}
-			}
+			});
 
 			this.doneCount = doneCount;
 			this.remainingCount = allCount - doneCount;
@@ -118,11 +117,10 @@
 
 			var newTodo = this.newTodo;
 
-			// ignore empty entries
+			// put new todo at the end of the list; ignore empty entries
 			var trimmedTitle = trim(newTodo.title);
-
 			if (trimmedTitle.length > 0) {
-				// put new todo at the end of the list
+
 				this.todos.push({
 					title : trimmedTitle,
 					completed : false,
@@ -132,7 +130,8 @@
 				this.syncData();
 			}
 
-			return false; // to prevent default behavior
+			// prevent default behavior (form submit)
+			return false;
 		},
 
 		/**
@@ -247,17 +246,15 @@
 			this.names = names;
 		},
 
-		match : function (name) {
-			var names, index, length;
-
-			names = this.names
-			for (index = 0, length = names.length; index < length; index++) {
-				if (names[index] === name) {
-					return true;
-				}
-			}
-
-			return false;
+		/**
+		 * Returns true when `testedFilter` matches one of the name in `this.names`.
+		 * @param {String} testedFilter
+		 * @return {Boolean}
+		 */
+		matches : function (testedFilter) {
+			return this.names.some(function (filterName) {
+				return filterName === testedFilter;
+			});
 		}
 	});
 
@@ -280,16 +277,15 @@
 				['active'],
 				['completed', '!']
 			];
-			var filters = [];
+
+			this.filters = filtersSpecs.map(function (spec) {
+				return new Filter(spec);
+			});
+
 			var filtersMap = {};
-
-			for (var i = 0, length = filtersSpecs.length; i < length; i++) {
-				var filter = new Filter(filtersSpecs[i]);
-				filters.push(filter);
+			this.filters.forEach(function (filter) {
 				filtersMap[filter.names[0]] = filter;
-			}
-
-			this.filters = filters;
+			});
 			this.filtersMap = filtersMap;
 
 			this.router = director.Router({
