@@ -18,16 +18,15 @@
 	'use strict';
 
 	var ESCAPE_KEY = 27;
+	var LOCALSTORAGE_KEY = 'todos-hashspace';
 
 	function trim(str) {
 		return str.replace(/^\s+|\s+$/g, '');
 	};
 
-
-
 	// Parts of this code has been copied from the angular MVC controller at
-	// https://github.com/addyosmani/todomvc/blob/gh-pages/architecture-examples/angularjs/js/controllers/todoCtrl.js
-	var klass = require("hsp/klass");
+	// https://github.com/tastejs/todomvc/blob/gh-pages/architecture-examples/angularjs/js/controllers/todoCtrl.js
+	var klass = require('hsp/klass');
 
 	/**
 	 * Main Todo Controller
@@ -38,15 +37,28 @@
 		 */
 		$constructor : function () {
 			// todo structure used to create a new todo
-			this.newTodo = {title : ""};
+			this.newTodo = {title : ''};
+
 			// todo used for the edition so that canceling edition change the initial todo
-			this.editTodo = {title : ""};
-			this.allChecked = false; // tells if all tasks are checked (cf. syncData)
-			this.remainingCount = 1; // number of remaining tasks (cf. syncData)
-			this.doneCount = 0; // number of items done (cf. syncData)
-			this.todos = [ // todo list - empty by default
-				// sample item: {title: "task text", completed: false, editMode: false}
-			];
+			this.editTodo = {title : ''};
+
+			// number of items done and remaining. See this.syncData
+			this.allChecked = false;
+			this.remainingCount = 0;
+			this.doneCount = 0;
+
+			// hack for PhantomJS (since it's impossible to disable local storage or run a new profile each time)
+			// https://github.com/ariya/phantomjs/issues/11055
+			if (window.callPhantom) {
+				localStorage.clear();
+			}
+
+			// todo list - empty by default
+			// sample item: {title: 'task text', completed: false, editMode: false}
+			this.todos = JSON.parse(localStorage.getItem(LOCALSTORAGE_KEY)) || [];
+
+			// recompute data after reading from local storage
+			this.syncData();
 		},
 
 		/**
@@ -58,17 +70,44 @@
 			var doneCount = 0;
 			var todos = this.todos;
 
-			var index, size, todo;
-			for (index = 0, size = todos.length; index < size; index++) {
-				todo = todos[index];
+			for (var i = 0, allCount = todos.length; i < allCount; i++) {
+				var todo = todos[i];
 
-				if (todo.completed)
+				if (todo.completed) {
 					doneCount++;
+				}
 			}
 
 			this.doneCount = doneCount;
-			this.remainingCount = size - doneCount;
-			this.allChecked = (doneCount === size);
+			this.remainingCount = allCount - doneCount;
+			this.allChecked = (doneCount === allCount);
+
+			this.updateLocalStorage();
+		},
+
+		updateLocalStorage : function () {
+			localStorage.setItem(LOCALSTORAGE_KEY, this.serialize(this.todos));
+		},
+
+		/**
+		 * Removes metadata from data model and returns stringified JSON representation of it
+		 */
+		serialize : function (model) {
+			var newModel = [];
+			// First clone the object, removing metadata (with keys starting with '+')
+			// Also, get rid of 'editMode' from the model. Then serialize that
+			// TODO reimplement it in a better way once https://github.com/ariatemplates/hashspace/issues/238 is fixed
+			for (var i = 0; i < model.length; i++) {
+				var entry = model[i];
+				var newEntry = {};
+				for (var key in entry) {
+					if (key.charAt(0) != '+' && key != 'editMode') {
+						newEntry[key] = entry[key];
+					}
+				}
+				newModel.push(newEntry);
+			}
+			return JSON.stringify(newModel);
 		},
 
 		/**
@@ -89,7 +128,7 @@
 					completed : false,
 					editMode : false
 				});
-				newTodo.title  = "";
+				newTodo.title  = '';
 				this.syncData();
 			}
 
@@ -103,6 +142,12 @@
 			this.doneEditingAll();
 			todo.editMode = true;
 			this.editTodo.title = todo.title;
+			setTimeout(function () {
+				var activeTodo = document.getElementById('active-todo');
+				if (activeTodo) {
+					activeTodo.focus();
+				}
+			}, 20);
 		},
 
 		/**
@@ -123,6 +168,7 @@
 			} else {
 				todo.title = trim(this.editTodo.title);
 				todo.editMode = false;
+				this.updateLocalStorage();
 			}
 			return false;
 		},
@@ -156,7 +202,7 @@
 		 * Cancel the edition for a todo a keeps the previous value.
 		 */
 		cancelEditing : function (todo) {
-			this.editTodo.title = "";
+			this.editTodo.title = '';
 			todo.editMode = false;
 		},
 
@@ -191,7 +237,7 @@
 
 
 
-	var director = require("libs/director");
+	var director = require('libs/director');
 
 	/**
 	 * Filter specifications for the list of todos.
