@@ -273,26 +273,18 @@
 		 * @param {DOMElement} DOMElt A HTML DOM element where the panel should be displayed (optional).
 		 */
 		$constructor : function (DOMElt) {
-			// call super constructor
 			TodoCtrl.$constructor.call(this);
-			// add ui-items to the data model
 
-			// ------------------------------------------------------- filtering
-
-			var filtersSpecs, filters, filtersMap;
-			var index, length;
-			var filter;
-
-			filtersSpecs = [
+			var filtersSpecs = [
 				['all', ''],
 				['active'],
 				['completed', '!']
 			];
-			filters = [];
-			filtersMap = {};
+			var filters = [];
+			var filtersMap = {};
 
-			for (index = 0, length = filtersSpecs.length; index < length; index++) {
-				filter = new Filter(filtersSpecs[index]);
+			for (var i = 0, length = filtersSpecs.length; i < length; i++) {
+				var filter = new Filter(filtersSpecs[i]);
 				filters.push(filter);
 				filtersMap[filter.names[0]] = filter;
 			}
@@ -313,11 +305,13 @@
 		 * Tells if a todo item should be displayed based on the current UI filter.
 		 */
 		isInFilter : function (todo, filter) {
-			if (filter === this.filtersMap['active'] && todo.completed)
+			if (filter === this.filtersMap['active'] && todo.completed) {
 				return false;
+			}
 
-			if (filter === this.filtersMap['completed'] && !todo.completed)
+			if (filter === this.filtersMap['completed'] && !todo.completed) {
 				return false;
+			}
 
 			return true;
 		},
@@ -326,9 +320,7 @@
 		 * Select a new filter.
 		 */
 		selectFilter : function (filterName) {
-			var filter;
-
-			filter = this.filtersMap[filterName];
+			var filter = this.filtersMap[filterName];
 			if (filter != null) {
 				this.filter = filter;
 			}
