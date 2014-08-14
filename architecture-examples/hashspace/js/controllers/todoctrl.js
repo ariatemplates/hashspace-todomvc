@@ -47,6 +47,12 @@
 			this.remainingCount = 0;
 			this.doneCount = 0;
 
+			// hack for PhantomJS (since it's impossible to disable local storage or run a new profile each time)
+			// https://github.com/ariya/phantomjs/issues/11055
+			if (window.callPhantom) {
+				localStorage.clear();
+			}
+
 			// todo list - empty by default
 			// sample item: {title: 'task text', completed: false, editMode: false}
 			this.todos = JSON.parse(localStorage.getItem(LOCALSTORAGE_KEY)) || [];
