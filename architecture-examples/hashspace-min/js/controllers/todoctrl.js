@@ -47,7 +47,7 @@ var $set=require("hsp/$set");
 			$set(this, "remainingCount", 0);
 			$set(this, "doneCount", 0);
 
-			// hack for PhantomJS (since it's impossible to disable local storage or run a new profile each time)
+			// FIXME hack for PhantomJS (since it's impossible to disable local storage or run a new profile each time)
 			// https://github.com/ariya/phantomjs/issues/11055
 			if (window.callPhantom) {
 				localStorage.clear();
@@ -67,16 +67,15 @@ var $set=require("hsp/$set");
 		 * loops..)
 		 */
 		syncData : function () {
-			var doneCount = 0;
 			var todos = this.todos;
 
-			for (var i = 0, allCount = todos.length; i < allCount; i++) {
-				var todo = todos[i];
-
-				if (todo.completed) {
+			var allCount = this.todos.length;
+			var doneCount = 0;
+			this.todos.forEach(function (todo) {
+				if(todo.completed) {
 					doneCount++;
 				}
-			}
+			});
 
 			$set(this, "doneCount", doneCount);
 			$set(this, "remainingCount", allCount - doneCount);
@@ -93,20 +92,18 @@ var $set=require("hsp/$set");
 		 * Removes metadata from data model and returns stringified JSON representation of it
 		 */
 		serialize : function (model) {
-			var newModel = [];
 			// First clone the object, removing metadata (with keys starting with '+')
 			// Also, get rid of 'editMode' from the model. Then serialize that
-			// TODO reimplement it in a better way once https://github.com/ariatemplates/hashspace/issues/238 is fixed
-			for (var i = 0; i < model.length; i++) {
-				var entry = model[i];
+			// FIXME reimplement it in a better way once https://github.com/ariatemplates/hashspace/issues/238 is fixed
+			var newModel = model.map(function (entry) {
 				var newEntry = {};
 				for (var key in entry) {
 					if (key.charAt(0) != '+' && key != 'editMode') {
 						$set(newEntry, key, entry[key]);
 					}
 				}
-				newModel.push(newEntry);
-			}
+				return newEntry;
+			});
 			return JSON.stringify(newModel);
 		},
 
@@ -118,11 +115,10 @@ var $set=require("hsp/$set");
 
 			var newTodo = this.newTodo;
 
-			// ignore empty entries
+			// put new todo at the end of the list; ignore empty entries
 			var trimmedTitle = trim(newTodo.title);
-
 			if (trimmedTitle.length > 0) {
-				// put new todo at the end of the list
+
 				this.todos.push({
 					title : trimmedTitle,
 					completed : false,
@@ -132,7 +128,8 @@ var $set=require("hsp/$set");
 				this.syncData();
 			}
 
-			return false; // to prevent default behavior
+			// prevent default behavior (form submit)
+			return false;
 		},
 
 		/**
@@ -142,6 +139,8 @@ var $set=require("hsp/$set");
 			this.doneEditingAll();
 			$set(todo, "editMode", true);
 			$set(this.editTodo, "title", todo.title);
+
+			// FIXME find a better way to put the focus into the active todo
 			setTimeout(function () {
 				var activeTodo = document.getElementById('active-todo');
 				if (activeTodo) {
@@ -187,15 +186,11 @@ var $set=require("hsp/$set");
 		 */
 		doneEditingAll : function() {
 			// cancel current edit if any
-			var todos, index, length, todo;
-			todos = this.todos;
-			for (index = 0, length = todos.length; index < length; index++) {
-				todo = todos[index];
-
+			this.todos.forEach(function (todo) {
 				if (todo.editMode) {
 					this.doneEditing(todo);
 				}
-			}
+			}, this);
 		},
 
 		/**
@@ -220,16 +215,9 @@ var $set=require("hsp/$set");
 		 * Toggle all todo items' completed state.
 		 */
 		toggleAllDone : function () {
-			var newState = this.allChecked;
-			var todos, index, length, todo;
-
-			todos = this.todos;
-			for (index = 0, length = todos.length; index < length; index++) {
-				todo = todos[index];
-
-				$set(todo, "completed", newState);
-			}
-
+			this.todos.forEach(function (todo) {
+				$set(todo, "completed", this.allChecked);
+			}, this);
 			this.syncData();
 		}
 
@@ -247,17 +235,15 @@ var $set=require("hsp/$set");
 			$set(this, "names", names);
 		},
 
-		match : function (name) {
-			var names, index, length;
-
-			names = this.names
-			for (index = 0, length = names.length; index < length; index++) {
-				if (names[index] === name) {
-					return true;
-				}
-			}
-
-			return false;
+		/**
+		 * Returns true when `testedFilter` matches one of the name in `this.names`.
+		 * @param {String} testedFilter
+		 * @return {Boolean}
+		 */
+		matches : function (testedFilter) {
+			return this.names.some(function (filterName) {
+				return filterName === testedFilter;
+			});
 		}
 	});
 
@@ -273,51 +259,46 @@ var $set=require("hsp/$set");
 		 * @param {DOMElement} DOMElt A HTML DOM element where the panel should be displayed (optional).
 		 */
 		$constructor : function (DOMElt) {
-			// call super constructor
 			TodoCtrl.$constructor.call(this);
-			// add ui-items to the data model
 
-			// ------------------------------------------------------- filtering
-
-			var filtersSpecs, filters, filtersMap;
-			var index, length;
-			var filter;
-
-			filtersSpecs = [
+			var filtersSpecs = [
 				['all', ''],
 				['active'],
 				['completed', '!']
 			];
-			filters = [];
-			filtersMap = {};
 
-			for (index = 0, length = filtersSpecs.length; index < length; index++) {
-				filter = new Filter(filtersSpecs[index]);
-				filters.push(filter);
+			$set(this, "filters", filtersSpecs.map(function (spec) {
+				return new Filter(spec);
+			}));
+
+			var filtersMap = {};
+			this.filters.forEach(function (filter) {
 				$set(filtersMap, filter.names[0], filter);
-			}
-
-			$set(this, "filters", filters);
+			});
 			$set(this, "filtersMap", filtersMap);
 
+			// restore filter state from URL if possible, default to 'all'
+			var initFilterName = location.hash.slice(2) || 'all'; // omit leading '#/'
 			$set(this, "router", director.Router({
 			    '/': this.selectFilter.bind(this, 'all'),
 			    '/!': this.selectFilter.bind(this, 'completed'),
 			    '/:filter': this.selectFilter.bind(this)
-			}).init('/all'));
+			}).init('/' + initFilterName));
 
-			$set(this, "filter", this.filtersMap['all']);
+			this.selectFilter(initFilterName);
 		},
 
 		/**
 		 * Tells if a todo item should be displayed based on the current UI filter.
 		 */
 		isInFilter : function (todo, filter) {
-			if (filter === this.filtersMap['active'] && todo.completed)
+			if (filter === this.filtersMap['active'] && todo.completed) {
 				return false;
+			}
 
-			if (filter === this.filtersMap['completed'] && !todo.completed)
+			if (filter === this.filtersMap['completed'] && !todo.completed) {
 				return false;
+			}
 
 			return true;
 		},
@@ -326,9 +307,7 @@ var $set=require("hsp/$set");
 		 * Select a new filter.
 		 */
 		selectFilter : function (filterName) {
-			var filter;
-
-			filter = this.filtersMap[filterName];
+			var filter = this.filtersMap[filterName];
 			if (filter != null) {
 				$set(this, "filter", filter);
 			}

@@ -100,7 +100,7 @@ var TodoUICtrl = require("../controllers/todoctrl").TodoUICtrl;
  * @param ctrl The general controller.
  */
 {template filterLink(label, filter, ctrl)}
-	<a href="#/{filter}" title="{label}" class="{'selected': ctrl.filter.match(filter)}">
+	<a href="#/{filter}" title="{label}" class="{'selected': ctrl.filter.matches(filter)}">
 		{label}
 	</a>
 {/template}

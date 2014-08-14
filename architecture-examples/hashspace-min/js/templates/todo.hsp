@@ -55,5 +55,5 @@ var todoItem = require("hsp/rt").template(["todo","ctrl"], function(n){
  */
 
 var filterLink = require("hsp/rt").template(["label","filter","ctrl"], function(n){
-  return [n.elt("a",{e1:[1,1,"filter"],e2:[1,1,"label"],e3:[6,function(a0) {return ((a0)? ''+"selected":'');},4],e4:[3,3,"ctrl","filter","match",1,5],e5:[1,1,"filter"]},{"href":["#/",1],"title":["",2],"class":["",3]},0,[n.$text({e1:[1,1,"label"]},["",1," "])])];
+  return [n.elt("a",{e1:[1,1,"filter"],e2:[1,1,"label"],e3:[6,function(a0) {return ((a0)? ''+"selected":'');},4],e4:[3,3,"ctrl","filter","matches",1,5],e5:[1,1,"filter"]},{"href":["#/",1],"title":["",2],"class":["",3]},0,[n.$text({e1:[1,1,"label"]},["",1," "])])];
 });
