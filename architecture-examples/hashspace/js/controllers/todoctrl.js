@@ -82,6 +82,10 @@
 			this.remainingCount = allCount - doneCount;
 			this.allChecked = (doneCount === allCount);
 
+			this.updateLocalStorage();
+		},
+
+		updateLocalStorage : function () {
 			localStorage.setItem(LOCALSTORAGE_KEY, this.serialize(this.todos));
 		},
 
@@ -164,6 +168,7 @@
 			} else {
 				todo.title = trim(this.editTodo.title);
 				todo.editMode = false;
+				this.updateLocalStorage();
 			}
 			return false;
 		},
